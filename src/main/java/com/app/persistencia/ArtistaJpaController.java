@@ -70,4 +70,47 @@ public class ArtistaJpaController {
 	em.close();
 	}
 	}
+	
+	// Método para editar/actualizar un Artista en la base de datos
+	public void editar(Artista art) throws Exception {
+	    EntityManager em = null;
+	    try {
+	        em = getEntityManager();
+	        em.getTransaction().begin();
+	        // merge actualiza el estado del objeto en la base de datos
+	        art = em.merge(art);
+	        em.getTransaction().commit();
+	    } catch (Exception ex) {
+	        if (buscarUno(art.getId()) == null) {
+	            throw new Exception("El artista con ID " + art.getId() + " ya no existe.");
+	        }
+	        throw ex;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
+
+	// Método para eliminar un Artista por su ID
+	public void eliminar(int id) throws Exception {
+	    EntityManager em = null;
+	    try {
+	        em = getEntityManager();
+	        em.getTransaction().begin();
+	        Artista art;
+	        try {
+	            art = em.getReference(Artista.class, id);
+	            art.getId();
+	        } catch (jakarta.persistence.EntityNotFoundException enfe) {
+	            throw new Exception("El artista con ID " + id + " ya no existe.", enfe);
+	        }
+	        em.remove(art);
+	        em.getTransaction().commit();
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
 }

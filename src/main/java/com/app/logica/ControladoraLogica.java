@@ -29,10 +29,10 @@ public class ControladoraLogica {
 
 		// AGREGAR AL MENOS UNA VALIDACIÓN MAS
 		// NUEVA VALIDACIÓN: Fecha de nacimiento no nula y en el pasado/presente
-        if (art.getFechaNacimiento() == null) {
-            throw new Exception("El artista debe tener una fecha de nacimiento.");
-        }
-		
+		if (art.getFechaNacimiento() == null) {
+			throw new Exception("El artista debe tener una fecha de nacimiento.");
+		}
+
 		// Si pasa todas las validaciones, recién ahí se manda a la persistencia
 		controlPersis.crearArtista(art);
 	}
@@ -53,30 +53,90 @@ public class ControladoraLogica {
 		if (can.getAnio() < 1900) {
 			throw new Exception("El año de la canción debe ser válido.");
 		}
-		
+
 		// AGREGAR AL MENOS UNA VALIDACIÓN MAS
 
 		// Si pasa todas las validaciones, se guarda en la base de datos
 		controlPersis.crearCancion(can);
-		
+
 	}
-	
+
 	// BUSCAR UN ARTISTA por su id
 	public Artista buscarUnArtista(int id) {
-	return controlPersis.buscarArtista(id);
+		return controlPersis.buscarArtista(id);
 	}
+
 	// LISTAR TODOS LOS ARTISTAS
 	public List<Artista> listarArtistas() {
-	return controlPersis.buscarTodosLosArtistas();
+		return controlPersis.buscarTodosLosArtistas();
 	}
-	
+
 	// BUSCAR UNA CANCION por su id
 	public Cancion buscarUnaCancion(int id) {
-	return controlPersis.buscarCancion(id);
+		return controlPersis.buscarCancion(id);
 	}
+
 	// LISTAR TODAS LAS CANCIONES
 	public List<Cancion> listarCanciones() {
-	return controlPersis.buscarTodasLasCanciones();
+		return controlPersis.buscarTodasLasCanciones();
+	}
+
+	// ----- EDICIÓN Y BAJA DE ARTISTA -----
+	public void editarArtista(Artista art) throws Exception {
+		// Validación de existencia
+		if (controlPersis.buscarArtista(art.getId()) == null) {
+			throw new Exception("El artista a editar no existe en el sistema.");
+		}
+		// Mismas validaciones que en el alta
+		if (art.getNombre() == null || art.getNombre().isEmpty()) {
+			throw new Exception("El artista debe tener un nombre.");
+		}
+		if (art.getGeneroMusical() == null || art.getGeneroMusical().isEmpty()) {
+			throw new Exception("El artista debe tener un género musical.");
+		}
+		if (art.getEdad() <= 0) {
+			throw new Exception("La edad del artista debe ser mayor a 0.");
+		}
+		if (art.getFechaNacimiento() == null) {
+			throw new Exception("El artista debe tener una fecha de nacimiento.");
+		}
+
+		controlPersis.editarArtista(art);
+	}
+
+	public void eliminarArtista(int id) throws Exception {
+		// Validación de existencia
+		if (controlPersis.buscarArtista(id) == null) {
+			throw new Exception("El artista a eliminar no existe.");
+		}
+		controlPersis.eliminarArtista(id);
+	}
+
+	// ----- EDICIÓN Y BAJA DE CANCIÓN -----
+	public void editarCancion(Cancion can) throws Exception {
+		// Validación de existencia
+		if (controlPersis.buscarCancion(can.getId()) == null) {
+			throw new Exception("La canción a editar no existe en el sistema.");
+		}
+		// Mismas validaciones que en el alta
+		if (can.getTitulo() == null || can.getTitulo().isEmpty()) {
+			throw new Exception("La canción debe tener un título.");
+		}
+		if (can.getDuracion() <= 0) {
+			throw new Exception("La duración debe ser mayor a 0 segundos.");
+		}
+		if (can.getAnio() < 1900) {
+			throw new Exception("El año de la canción debe ser válido.");
+		}
+
+		controlPersis.editarCancion(can);
+	}
+
+	public void eliminarCancion(int id) throws Exception {
+		// Validación de existencia
+		if (controlPersis.buscarCancion(id) == null) {
+			throw new Exception("La canción a eliminar no existe.");
+		}
+		controlPersis.eliminarCancion(id);
 	}
 }
-

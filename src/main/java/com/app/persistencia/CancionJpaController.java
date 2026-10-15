@@ -71,4 +71,45 @@ public class CancionJpaController {
 	em.close();
 	}
 	}
+	// Método para editar/actualizar una Canción en la base de datos
+	public void editar(Cancion canc) throws Exception {
+	    EntityManager em = null;
+	    try {
+	        em = getEntityManager();
+	        em.getTransaction().begin();
+	        canc = em.merge(canc);
+	        em.getTransaction().commit();
+	    } catch (Exception ex) {
+	        if (buscarUno(canc.getId()) == null) {
+	            throw new Exception("La canción con ID " + canc.getId() + " ya no existe.");
+	        }
+	        throw ex;
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
+
+	// Método para eliminar una Canción por su ID
+	public void eliminar(int id) throws Exception {
+	    EntityManager em = null;
+	    try {
+	        em = getEntityManager();
+	        em.getTransaction().begin();
+	        Cancion canc;
+	        try {
+	            canc = em.getReference(Cancion.class, id);
+	            canc.getId();
+	        } catch (jakarta.persistence.EntityNotFoundException enfe) {
+	            throw new Exception("La canción con ID " + id + " ya no existe.", enfe);
+	        }
+	        em.remove(canc);
+	        em.getTransaction().commit();
+	    } finally {
+	        if (em != null) {
+	            em.close();
+	        }
+	    }
+	}
 }

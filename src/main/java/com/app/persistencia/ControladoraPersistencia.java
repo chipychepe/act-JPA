@@ -44,7 +44,23 @@ public class ControladoraPersistencia {
 	public List<Cancion> buscarTodasLasCanciones() {
 	return cancionJpa.buscarTodos();
 	}
+	// ----- ARTISTA -----
+	public void editarArtista(Artista artista) throws Exception {
+	    artistaJpa.editar(artista);
+	}
 
+	public void eliminarArtista(int id) throws Exception {
+	    artistaJpa.eliminar(id);
+	}
+
+	// ----- CANCIÓN -----
+	public void editarCancion(Cancion cancion) throws Exception {
+	    cancionJpa.editar(cancion);
+	}
+
+	public void eliminarCancion(int id) throws Exception {
+	    cancionJpa.eliminar(id);
+	}
 }
 
 
